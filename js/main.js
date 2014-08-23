@@ -39,8 +39,21 @@ Q.Sprite.extend("Tower", {
 
 Q.Sprite.extend("Switch", {
   init: function (p) {
-    this._super(p, { sheet: 'switch' });
+    this._super(p, {
+      sheet: 'switch',
+      sensor: true,
+      _whenLastPressed: -1
+    });
+
+    this.on("sensor");
+  },
+  sensor: function (col) {
+    if ( (this.p._whenLastPressed < Q._loopFrame - 1) ) {
+      this.stage.dark = !this.stage.dark;
+    }
+    this.p._whenLastPressed = Q._loopFrame;
   }
+
 });
 
 Q.Sprite.extend("Enemy",{
@@ -50,13 +63,23 @@ Q.Sprite.extend("Enemy",{
     // Enemies use the Bounce AI to change direction whenever they run into something.
     this.add('2d, aiBounce');
 
-    this.on("bump.left,bump.right,bump.bottom", function (collision) {
+    this.on("hit.sprite", function (collision) {
+      if (this.stage.dark) { return; }
       if (collision.obj.isA("Player")) {
         Q.stageScene("endGame",1, { label: "You Died" });
         collision.obj.destroy();
       }
     });
 
+  },
+
+  step: function (dt) {
+    if (this.stage.dark) {
+      this.p.vx = 0;
+    } else {
+      if (this.p.vx !== 0) { this.p._lastVx = this.p.vx; }
+      this.p.vx = this.p._lastVx;
+    }
   }
 });
 
@@ -66,18 +89,17 @@ Q.scene("level0", function (stage) {
   stage.insert(
     new Q.Repeater({ asset: "background-wall.png", speedX: 0.5, speedY: 0.5 })
   );
-
   stage.collisionLayer(
     new Q.TileLayer({ dataAsset: 'level0.json', sheet: 'tiles' })
   );
 
-  var player = stage.insert(new Q.Player({ x: 80, y: 80} ));
-  stage.add("viewport").follow(player);
+  stage.insert(new Q.Tower({ x: 592, y: 17 }));
+  stage.insert(new Q.Switch({ x: 304, y: 48 }));
 
   stage.insert(new Q.Enemy({ x: 400, y: 80 }));
 
-  stage.insert(new Q.Tower({ x: 592, y: 17 }));
-  stage.insert(new Q.Switch({ x: 304, y: 48 }));
+  var player = stage.insert(new Q.Player({ x: 80, y: 80} ));
+  stage.add("viewport").follow(player);
 });
 
 
