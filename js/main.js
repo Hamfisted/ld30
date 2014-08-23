@@ -37,6 +37,12 @@ Q.Sprite.extend("Tower", {
   }
 });
 
+Q.Sprite.extend("Switch", {
+  init: function (p) {
+    this._super(p, { sheet: 'switch' });
+  }
+});
+
 Q.Sprite.extend("Enemy",{
   init: function (p) {
     this._super(p, { sheet: 'enemy', vx: 100 });
@@ -71,6 +77,7 @@ Q.scene("level0", function (stage) {
   stage.insert(new Q.Enemy({ x: 400, y: 80 }));
 
   stage.insert(new Q.Tower({ x: 592, y: 17 }));
+  stage.insert(new Q.Switch({ x: 304, y: 48 }));
 });
 
 
@@ -109,6 +116,8 @@ Q.scene('endGame', function (stage) {
 Q.load("sprites.png, sprites.json, level0.json, tiles.png, background-wall.png", function () {
   // Sprites sheets can be created manually
   Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
+
+  Q.sheet("switch","tiles.png", {"sx":64,"sy":0,"cols":1,"tilew":32,"tileh":32,"frames":1});
 
   // Or from a .json asset that defines sprite locations
   Q.compileSheets("sprites.png","sprites.json");
