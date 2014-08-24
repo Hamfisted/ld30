@@ -80,11 +80,9 @@ Q.Sprite.extend("Enemy",{
     Q.state.on("change.lightdark", this, function(isDark) {
       this.p.hurtplayer = !isDark;
       if (isDark) {
-        this.del("aiBounce");
         this.p.oldVx = this.p.vx;
         this.p.vx = 0;
       } else {
-        this.add("aiBounce");
         this.p.vx = this.p.oldVx;
       }
     });
