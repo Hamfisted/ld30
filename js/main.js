@@ -19,6 +19,8 @@ Q.Sprite.extend("Player",{
     this._super(p, {
       sheet: 'player',
       sprite: 'player',
+      type: Q.SPRITE_ACTIVE,
+      collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ENEMY,
       x: 200,
       y: 50,
       dead: false,
@@ -55,7 +57,7 @@ Q.Sprite.extend("Player",{
 
   die: function () {
     if (this.p.dead) { return; }
-
+    this.p.collisionMask ^= Q.SPRITE_ENEMY;
     this.del('platformerControls');
     Q.state.set("playerAlive", false);
     this.p.dead = true;
@@ -119,7 +121,12 @@ Q.Sprite.extend("Switch", {
 
 Q.Sprite.extend("Enemy",{
   init: function (p) {
-    this._super(p, { sheet: 'enemy', vx: 100 });
+    this._super(p, {
+      sheet: 'enemy',
+      vx: 100,
+      type: Q.SPRITE_ENEMY,
+      collisionMask: Q.SPRITE_DEFAULT
+    });
     this.p.hurtplayer = true;
 
     // Enemies use the Bounce AI to change direction whenever they run into something.
