@@ -17,15 +17,6 @@ Q.Sprite.extend("Player",{
     });
 
     this.add('2d, platformerControls');
-
-    this.on("hit.sprite", function (collision) {
-
-      if (collision.obj.isA("Tower")) {
-        Q.stageScene("endGame",1, { label: "You Won!" });
-        this.destroy();
-      }
-    });
-
   }
 
 });
@@ -34,6 +25,19 @@ Q.Sprite.extend("Player",{
 Q.Sprite.extend("Tower", {
   init: function (p) {
     this._super(p, { sheet: 'tower' });
+    this.p.winActive = true;
+
+    this.on("hit.sprite", function (collision) {
+      if (!this.p.winActive) { return; }
+      if (collision.obj.isA("Player")) {
+        Q.stageScene("endGame",1, { label: "You Won!" });
+        collision.obj.destroy();
+      }
+    });
+
+    Q.state.on("change.lightdark", this, function(isDark) {
+      this.p.winActive = !isDark;
+    });
   }
 });
 
@@ -100,6 +104,7 @@ Q.scene("level0", function (stage) {
 
   stage.insert(new Q.Tower({ x: 592, y: 17 }));
   stage.insert(new Q.Switch({ x: 304, y: 48 }));
+  stage.insert(new Q.Switch({ x: 592, y: -72 }));
 
   stage.insert(new Q.Enemy({ x: 400, y: 80 }));
 
