@@ -29,5 +29,13 @@ var assetsList = [
 
 Q.load(assetsList, function () {
   defineSheets();
+  Q.animations("player", {
+    right: { frames: [0], flip: false },
+    left:  { frames: [0], flip: "x" },
+  });
+  Q.animations("tower", {
+    right: { frames: [0], flip: false },
+    left:  { frames: [0], flip: "x" },
+  });
   Q.stageScene("startGame");
 });

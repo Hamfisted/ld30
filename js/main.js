@@ -11,12 +11,23 @@ Q.Sprite.extend("Player",{
   init: function (p) {
 
     this._super(p, {
-      sheet: "player",  // Setting a sprite sheet sets sprite width and height
-      x: 200,           // You can also set additional properties that can
-      y: 50             // be overridden on object creation
+      sheet: 'player',
+      sprite: 'player',
+      x: 200,
+      y: 50,
+      direction: 'right'
     });
 
-    this.add('2d, platformerControls');
+    this.add('2d, platformerControls, animation');
+  },
+
+  step: function () {
+    if (this.p.vx > 0) {
+      this.p.direction = 'right';
+    } else if (this.p.vx < 0) {
+      this.p.direction = 'left';
+    }
+    this.play(this.p.direction);
   }
 
 });
@@ -24,8 +35,14 @@ Q.Sprite.extend("Player",{
 
 Q.Sprite.extend("Tower", {
   init: function (p) {
-    this._super(p, { sheet: 'tower' });
+    this._super(p, {
+      sheet: 'tower',
+      sprite: 'tower',
+      direction: 'left'
+    });
     this.p.winActive = true;
+
+    this.add('animation');
 
     this.on("hit.sprite", function (collision) {
       if (!this.p.winActive) { return; }
@@ -39,6 +56,10 @@ Q.Sprite.extend("Tower", {
     Q.state.on("change.lightdark", this, function(isDark) {
       this.p.winActive = !isDark;
     });
+  },
+
+  step: function () {
+    this.play(this.p.direction);
   }
 });
 
@@ -110,7 +131,7 @@ Q.scene("level0", function (stage) {
 
   stage.insert(new Q.Tower({ x: 592, y: 17 }));
   stage.insert(new Q.Switch({ x: 304, y: 48 }));
-  stage.insert(new Q.Switch({ x: 592, y: -72 }));
+  stage.insert(new Q.Switch({ x: 592, y: -40 }));
 
   stage.insert(new Q.Enemy({ x: 400, y: 80 }));
 
@@ -126,13 +147,13 @@ Q.scene("level1", function (stage) {
     window.tiles = new Q.TileLayer({ dataAsset: 'level1.json', sheet: 'tiles' })
   );
 
-  stage.insert(new Q.Tower({ x: 592, y: 177 }));
+  stage.insert(new Q.Tower({ x: 624, y: 177 }));
   stage.insert(new Q.Switch({ x: 496, y: 80 }));
-  stage.insert(new Q.Switch({ x: 592, y: 88 }));
+  stage.insert(new Q.Switch({ x: 592, y: 112 }));
 
   stage.insert(new Q.Enemy({ x: 400, y: 112 }));
 
-  var player = stage.insert(new Q.Player({ x: 144, y: 80} ));
+  var player = stage.insert(new Q.Player({ x: 144, y: 160 }));
   stage.add("viewport").follow(player);
 });
 
