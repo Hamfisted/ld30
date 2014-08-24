@@ -91,13 +91,19 @@ Q.Sprite.extend("Enemy",{
 });
 
 
+Q.state.on('change.lightdark', function (isDark) {
+  var version = isDark ? '2' : '';
+  defineSheets(version);
+});
+
+
 Q.scene("level0", function (stage) {
 
   stage.insert(
     new Q.Repeater({ asset: "background-wall.png", speedX: 0.5, speedY: 0.5 })
   );
   stage.collisionLayer(
-    new Q.TileLayer({ dataAsset: 'level0.json', sheet: 'tiles' })
+    window.tiles = new Q.TileLayer({ dataAsset: 'level0.json', sheet: 'tiles' })
   );
 
   stage.insert(new Q.Tower({ x: 592, y: 17 }));
@@ -137,20 +143,4 @@ Q.scene('endGame', function (stage) {
 
   // Expand the container to visibily fit it's contents (with a padding of 20 pixels)
   container.fit(20);
-});
-
-// ## Asset Loading and Game Launch
-// Q.load can be called at any time to load additional assets
-// assets that are already loaded will be skipped
-// The callback will be triggered when everything is loaded
-Q.load("sprites.png, sprites.json, level0.json, tiles.png, background-wall.png", function () {
-  // Sprites sheets can be created manually
-  Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
-
-  Q.sheet("switch","tiles.png", {"sx":64,"sy":0,"cols":1,"tilew":32,"tileh":32,"frames":1});
-
-  // Or from a .json asset that defines sprite locations
-  Q.compileSheets("sprites.png","sprites.json");
-
-  Q.stageScene("level0");
 });
