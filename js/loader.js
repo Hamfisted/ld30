@@ -32,6 +32,8 @@ Q.load(assetsList, function () {
   Q.animations("player", {
     right: { frames: [0], flip: false },
     left:  { frames: [0], flip: "x" },
+    rightdie: { frames: [1,2,3,4], rate: 1/12, flip: false, loop: false },
+    leftdie:  { frames: [1,2,3,4], rate: 1/12, flip: 'x',   loop: false }
   });
   Q.animations("tower", {
     right: { frames: [0], flip: false },

@@ -21,19 +21,47 @@ Q.Sprite.extend("Player",{
       sprite: 'player',
       x: 200,
       y: 50,
-      direction: 'right'
+      dead: false,
+      deadTimer: 0,
+      direction: 'right',
+      rightPoints: [ [ -15, -15 ], [ -15, 15 ], [  3, 15 ],  [  3, -15 ] ],
+      leftPoints:  [ [  15, -15 ], [  15, 15 ], [ -3, 15 ],  [ -3, -15 ] ],
+      deadPoints:  [ [ -15, -15 ], [ -15, 15 ], [ 15, 15 ],  [ 15, -15 ] ],
     });
 
+    this.p.points = this.p.rightPoints;
     this.add('2d, platformerControls, animation');
+    this.on('die');
   },
 
   step: function () {
+    if (this.p.dead) {
+      this.p.deadTimer++;
+      if (this.p.deadTimer > 36) {
+        this.destroy();
+        Q.stageScene("endLevel", 1);
+      }
+      return;
+    }
+
     if (this.p.vx > 0) {
       this.p.direction = 'right';
     } else if (this.p.vx < 0) {
       this.p.direction = 'left';
     }
+    this.p.points = this.p[this.p.direction + 'Points'];
     this.play(this.p.direction);
+  },
+
+  die: function () {
+    if (this.p.dead) { return; }
+
+    this.del('platformerControls');
+    Q.state.set("playerAlive", false);
+    this.p.dead = true;
+    this.p.vx = 0;
+    this.p.points = this.p.deadPoints;
+    this.play(this.p.direction + 'die');
   }
 
 });
@@ -100,10 +128,7 @@ Q.Sprite.extend("Enemy",{
     this.on("hit.sprite", function (collision) {
       if (!this.p.hurtplayer) { return; }
       if (collision.obj.isA("Player")) {
-        //Q.stageScene("endGame",1, { label: "You Died" });
-        Q.state.set("playerAlive", false);
-        Q.stageScene("endLevel", 1);
-        collision.obj.destroy();
+        collision.obj.trigger('die');
       }
     });
 
