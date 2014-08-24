@@ -24,6 +24,7 @@ var assetsList = [
   'tiles2.png',
   'background-wall.png',
   'level0.json',
+  'level1.json',
 ];
 
 Q.load(assetsList, function () {

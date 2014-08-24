@@ -118,6 +118,24 @@ Q.scene("level0", function (stage) {
   stage.add("viewport").follow(player);
 });
 
+Q.scene("level1", function (stage) {
+  stage.insert(
+    new Q.Repeater({ asset: "background-wall.png", speedX: 0.5, speedY: 0.5 })
+  );
+  stage.collisionLayer(
+    window.tiles = new Q.TileLayer({ dataAsset: 'level1.json', sheet: 'tiles' })
+  );
+
+  stage.insert(new Q.Tower({ x: 592, y: 177 }));
+  stage.insert(new Q.Switch({ x: 496, y: 80 }));
+  stage.insert(new Q.Switch({ x: 592, y: 88 }));
+
+  stage.insert(new Q.Enemy({ x: 400, y: 112 }));
+
+  var player = stage.insert(new Q.Player({ x: 144, y: 80} ));
+  stage.add("viewport").follow(player);
+});
+
 
 // To display a game over / game won popup box,
 // create a endGame scene that takes in a `label` option
@@ -144,7 +162,7 @@ Q.scene('endGame', function (stage) {
   container.fit(20);
 });
 
-var NUM_LEVELS = 1;
+var NUM_LEVELS = 2;
 
 Q.scene("endLevel", function(stage) {
   if (Q.state.get("playerAlive")) {
