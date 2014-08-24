@@ -50,6 +50,7 @@ Q.Sprite.extend("Switch", {
   sensor: function (col) {
     if ( (this.p._whenLastPressed < Q._loopFrame - 1) ) {
       this.stage.dark = !this.stage.dark;
+      Q.state.set("lightdark", this.stage.dark);
     }
     this.p._whenLastPressed = Q._loopFrame;
   }
@@ -59,27 +60,31 @@ Q.Sprite.extend("Switch", {
 Q.Sprite.extend("Enemy",{
   init: function (p) {
     this._super(p, { sheet: 'enemy', vx: 100 });
+    this.p.hurtplayer = true;
 
     // Enemies use the Bounce AI to change direction whenever they run into something.
     this.add('2d, aiBounce');
 
     this.on("hit.sprite", function (collision) {
-      if (this.stage.dark) { return; }
+      if (!this.p.hurtplayer) { return; }
       if (collision.obj.isA("Player")) {
         Q.stageScene("endGame",1, { label: "You Died" });
         collision.obj.destroy();
       }
     });
 
-  },
+    Q.state.on("change.lightdark", this, function(isDark) {
+      this.p.hurtplayer = !isDark;
+      if (isDark) {
+        this.del("aiBounce");
+        this.p.oldVx = this.p.vx;
+        this.p.vx = 0;
+      } else {
+        this.add("aiBounce");
+        this.p.vx = this.p.oldVx;
+      }
+    });
 
-  step: function (dt) {
-    if (this.stage.dark) {
-      this.p.vx = 0;
-    } else {
-      if (this.p.vx !== 0) { this.p._lastVx = this.p.vx; }
-      this.p.vx = this.p._lastVx;
-    }
   }
 });
 
