@@ -5,6 +5,13 @@ var Q = window.Q = Quintus()
         .setup({ maximize: true }) // Maximize this game to the size of the browser
         .controls().touch();       // And turn on default input controls and touch input
 
+Q.input.keyboardControls({
+  UP: 'up',       '87': 'up',    // W
+  LEFT: 'left',   '65': 'left',  // A
+  DOWN: 'down',   '83': 'down',  // S
+  RIGHT: 'right', '68': 'right', // D
+  SPACE: 'up'
+});
 
 Q.Sprite.extend("Player",{
 
