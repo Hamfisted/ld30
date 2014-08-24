@@ -30,7 +30,8 @@ Q.Sprite.extend("Tower", {
     this.on("hit.sprite", function (collision) {
       if (!this.p.winActive) { return; }
       if (collision.obj.isA("Player")) {
-        Q.stageScene("endGame",1, { label: "You Won!" });
+        //Q.stageScene("endGame",1, { label: "You Won!" });
+        Q.stageScene("endLevel", 1);
         collision.obj.destroy();
       }
     });
@@ -72,7 +73,9 @@ Q.Sprite.extend("Enemy",{
     this.on("hit.sprite", function (collision) {
       if (!this.p.hurtplayer) { return; }
       if (collision.obj.isA("Player")) {
-        Q.stageScene("endGame",1, { label: "You Died" });
+        //Q.stageScene("endGame",1, { label: "You Died" });
+        Q.state.set("playerAlive", false);
+        Q.stageScene("endLevel", 1);
         collision.obj.destroy();
       }
     });
@@ -98,7 +101,6 @@ Q.state.on('change.lightdark', function (isDark) {
 
 
 Q.scene("level0", function (stage) {
-
   stage.insert(
     new Q.Repeater({ asset: "background-wall.png", speedX: 0.5, speedY: 0.5 })
   );
@@ -121,9 +123,6 @@ Q.scene("level0", function (stage) {
 // create a endGame scene that takes in a `label` option
 // to control the displayed message.
 Q.scene('endGame', function (stage) {
-  // skip this annoying process for debuggin
-  if (DEV) { return Q.stageScene('level0'); }
-
   var container = stage.insert(new Q.UI.Container({
     x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
   }));
@@ -138,9 +137,29 @@ Q.scene('endGame', function (stage) {
   // When the button is clicked, clear all the stages and restart the game.
   button.on("click", function () {
     Q.clearStages();
-    Q.stageScene('level0');
+    Q.stageScene('startGame');
   });
 
   // Expand the container to visibily fit it's contents (with a padding of 20 pixels)
   container.fit(20);
+});
+
+var NUM_LEVELS = 1;
+
+Q.scene("endLevel", function(stage) {
+  if (Q.state.get("playerAlive")) {
+    Q.state.inc("currentLevel", 1);
+  }
+  var nextLevel = Q.state.get("currentLevel");
+  if (nextLevel >= NUM_LEVELS) {
+    return Q.stageScene("endGame", 1, { label: "The End" });
+  }
+  Q.state.set("playerAlive", true);
+  Q.stageScene("level" + nextLevel);
+});
+
+Q.scene('startGame', function(stage) {
+  Q.state.set("playerAlive", true);
+  Q.state.set("currentLevel", 0);
+  Q.stageScene("level0");
 });

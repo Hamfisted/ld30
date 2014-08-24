@@ -28,6 +28,5 @@ var assetsList = [
 
 Q.load(assetsList, function () {
   defineSheets();
-
-  Q.stageScene("level0");
+  Q.stageScene("startGame");
 });
