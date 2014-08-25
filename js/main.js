@@ -10,6 +10,7 @@ Q.input.keyboardControls({
   LEFT: 'left',   A: 'left',
   DOWN: 'down',   S: 'down',
   RIGHT: 'right', D: 'right',
+  R: 'restartLevel'
 });
 
 Q.Sprite.extend("Player",{
@@ -34,6 +35,8 @@ Q.Sprite.extend("Player",{
 
     this.add('2d, platformerControls, animation');
     this.on('die');
+
+    Q.input.on('restartLevel', this, 'endLevel');
   },
 
   step: function () {
@@ -43,8 +46,7 @@ Q.Sprite.extend("Player",{
       this.p.animTimer++;
       // If dead, end level after 40 frames. Otherwise end after 64 frames
       if ( (this.p.dead && this.p.animTimer > 40) || this.p.animTimer > 64 ) {
-        this.destroy();
-        Q.stageScene("endLevel", 1);
+        this.endLevel();
       }
       return;
     }
@@ -63,12 +65,16 @@ Q.Sprite.extend("Player",{
   die: function () {
     if (this.p.dead) { return; }
     this.p.collisionMask ^= Q.SPRITE_ENEMY;
-    Q.state.set("playerAlive", false);
     this.p.dead = true;
     // set correct width & collision points when playing death animation
     this.p.cx = 15;
     this.p.points = this.p.deadPoints;
     this.play('die');
+  },
+
+  endLevel: function () {
+    this.destroy();
+    Q.stageScene("endLevel", 1, { won: this.p.won });
   }
 
 });
@@ -117,7 +123,8 @@ Q.Sprite.extend("Switch", {
     this.on("sensor");
   },
   sensor: function (col) {
-    if ( !Q.state.get("playerAlive") ) { return; }
+    if ( col.p.dead ) { return; }
+
     if ( (this.p._whenLastPressed < Q._loopFrame - 1) ) {
       this.stage.dark = !this.stage.dark;
       Q.state.set("lightdark", this.stage.dark);
@@ -267,21 +274,24 @@ Q.scene('endGame', function (stage) {
 
 var NUM_LEVELS = 2;
 
-Q.scene("endLevel", function(stage) {
-  if (Q.state.get("playerAlive")) {
+Q.scene("endLevel", function (stage) {
+  if (stage.options.won) {
     Q.state.inc("currentLevel", 1);
   }
   var nextLevel = Q.state.get("currentLevel");
   if (nextLevel >= NUM_LEVELS) {
     return Q.stageScene("endGame", 1, { label: "The End" });
   }
-  Q.state.set("lightdark", false);
-  Q.state.set("playerAlive", true);
-  Q.stageScene("level" + nextLevel, {sort: true});
+  Q.stageScene('startLevel');
 });
 
-Q.scene('startGame', function(stage) {
-  Q.state.set("playerAlive", true);
+Q.scene('startGame', function (stage) {
   Q.state.set("currentLevel", 0);
-  Q.stageScene("level0", {sort: true});
+  Q.stageScene('startLevel');
+});
+
+Q.scene('startLevel', function (stage) {
+  var currentLevel = Q.state.get("currentLevel");
+  Q.state.set("lightdark", false);
+  Q.stageScene("level" + currentLevel, {sort: true});
 });
