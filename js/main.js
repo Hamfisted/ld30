@@ -141,7 +141,7 @@ Q.Sprite.extend("Enemy",{
       sheet: 'enemy',
       vx: 100,
       type: Q.SPRITE_ENEMY,
-      collisionMask: Q.SPRITE_DEFAULT
+      collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ENEMY,
     });
     this.p.hurtplayer = true;
 
