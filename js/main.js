@@ -248,6 +248,52 @@ Q.scene("level1", function (stage) {
   stage.add("viewport").follow(player);
 });
 
+Q.scene("level2", function (stage) {
+  stage.insert(
+    new Q.Repeater({ asset: "background-wall.png", speedX: 0.5, speedY: 0.5 })
+  );
+  stage.collisionLayer(
+    window.tiles = new Q.TileLayer({ dataAsset: 'level2.json', sheet: 'tiles' })
+  );
+
+  stage.insert(new Q.Tower({ x: 240, y: 49, flip: false }));
+  stage.insert(new Q.Switch({ x: 176, y: 208 }));
+  stage.insert(new Q.Switch({ x: 496, y: 80 }));
+  // stage.insert(new Q.Switch({ x: 592, y: 112 }));
+
+  stage.insert(new Q.Enemy({ x: 304, y: 208 }));
+  stage.insert(new Q.Enemy({ x: 400, y: 112 }));
+  // stage.insert(new Q.Enemy({ x: 592, y: 177 }));
+
+  stage.insert(new Q.FallingBlock({ x: 144, y: 144 }));
+  stage.insert(new Q.FallingBlock({ x: 176, y: 144 }));
+
+  var player = stage.insert(new Q.Player({ x: 32, y: 0 }));
+  stage.add("viewport").follow(player);
+});
+
+Q.scene("level3", function (stage) {
+  stage.insert(
+    new Q.Repeater({ asset: "background-wall.png", speedX: 0.5, speedY: 0.5 })
+  );
+  stage.collisionLayer(
+    window.tiles = new Q.TileLayer({ dataAsset: 'level3.json', sheet: 'tiles' })
+  );
+
+  stage.insert(new Q.Tower({ x: 240, y: 49, flip: false }));
+  stage.insert(new Q.Switch({ x: 176, y: 208 }));
+  stage.insert(new Q.Switch({ x: 496, y: 80 }));
+
+  stage.insert(new Q.Enemy({ x: 304, y: 208 }));
+  stage.insert(new Q.Enemy({ x: 400, y: 112 }));
+
+  stage.insert(new Q.FallingBlock({ x: 144, y: 144 }));
+  stage.insert(new Q.FallingBlock({ x: 176, y: 144 }));
+
+  var player = stage.insert(new Q.Player({ x: 32, y: 0 }));
+  stage.add("viewport").follow(player);
+});
+
 
 Q.scene('overlay', function (stage) {
   stage.insert(new Q.UI.Text({
@@ -288,7 +334,7 @@ Q.scene('endGame', function (stage) {
   container.fit(20);
 });
 
-var NUM_LEVELS = 2;
+var NUM_LEVELS = 4;
 
 Q.scene("endLevel", function (stage) {
   if (stage.options.won) {
