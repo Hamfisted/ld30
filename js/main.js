@@ -28,13 +28,10 @@ Q.Sprite.extend("Player",{
       dead: false,
       won: false,
       animTimer: 0,
-      direction: 'right',
-      rightPoints: [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
-      leftPoints:  [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
-      deadPoints:  [ [ -15, -15 ], [ -15, 15 ], [ 15, 15 ],  [ 15, -15 ] ],
+      points:     [ [ -9,  -15 ], [ -9, 15 ], [ 9, 15 ], [ 9, -15 ] ],
+      deadPoints: [ [ -15, -15 ], [ -15, 15 ], [ 15, 15 ], [ 15, -15 ] ],
     });
 
-    this.p.points = this.p.rightPoints;
     this.add('2d, platformerControls, animation');
     this.on('die');
   },
@@ -53,12 +50,10 @@ Q.Sprite.extend("Player",{
     }
 
     if (this.p.vx > 0) {
-      this.p.direction = 'right';
+      this.p.flip = false;
     } else if (this.p.vx < 0) {
-      this.p.direction = 'left';
+      this.p.flip = 'x';
     }
-    this.p.points = this.p[this.p.direction + 'Points'];
-    this.play(this.p.direction);
 
     if (this.p.y > 800) {
       this.die();
@@ -70,9 +65,10 @@ Q.Sprite.extend("Player",{
     this.p.collisionMask ^= Q.SPRITE_ENEMY;
     Q.state.set("playerAlive", false);
     this.p.dead = true;
+    // set correct width & collision points when playing death animation
     this.p.cx = 15;
     this.p.points = this.p.deadPoints;
-    this.play(this.p.direction + 'die');
+    this.play('die');
   }
 
 });
@@ -86,11 +82,11 @@ Q.Sprite.extend("Tower", {
       cy: 33,
       points: [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
       z: 20,
-      direction: 'left',
+      flip: 'x',
+      winActive: true,
       rescued: false,
       rescueAnimTimer: 0
     });
-    this.p.winActive = true;
 
     this.add('animation');
 
@@ -99,18 +95,13 @@ Q.Sprite.extend("Tower", {
       if (collision.obj.isA("Player")) {
         collision.obj.p.won = true;
         this.p.rescued = true;
-        this.play(this.p.direction + 'rescue');
+        this.play('rescue');
       }
     });
 
     Q.state.on("change.lightdark", this, function(isDark) {
       this.p.winActive = !isDark;
     });
-  },
-
-  step: function () {
-    if (this.p.rescued) { return; }
-    this.play(this.p.direction);
   }
 });
 
