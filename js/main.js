@@ -247,6 +247,20 @@ Q.scene("level1", function (stage) {
 });
 
 
+Q.scene('overlay', function (stage) {
+  stage.insert(new Q.UI.Text({
+    x: Q.width/2, y: Q.height - 40,
+    label: 'Arrow keys or WASD to move.   R to reset.',
+    color: 'white',
+    family: 'KenPixel Mini',
+    weight: 400,
+    size: 20,
+    outlineColor: 'black',
+    outlineWidth: 5
+  }));
+});
+
+
 // To display a game over / game won popup box,
 // create a endGame scene that takes in a `label` option
 // to control the displayed message.
@@ -286,6 +300,7 @@ Q.scene("endLevel", function (stage) {
 });
 
 Q.scene('startGame', function (stage) {
+  Q.stageScene('overlay', 2);
   Q.state.set("currentLevel", 0);
   Q.stageScene('startLevel');
 });

@@ -1,3 +1,12 @@
-.container {
-  color: red; /* I'm just testing */
+@font-face {
+  font-family: 'KenPixel Mini';
+  src: url('../fonts/kenpixel_mini.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/kenpixel_mini.ttf')  format('truetype'); /* Safari, Android, iOS */
+
+  font-style:   normal;
+  font-weight:  400;
+}
+
+body {
+  font-family: 'KenPixel Mini';
 }
