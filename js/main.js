@@ -39,6 +39,8 @@ Q.Sprite.extend("Player",{
 
   step: function () {
     if (this.p.dead) {
+      this.del('platformerControls');
+      this.p.vx = 0;
       this.p.deadTimer++;
       if (this.p.deadTimer > 36) {
         this.destroy();
@@ -63,10 +65,8 @@ Q.Sprite.extend("Player",{
   die: function () {
     if (this.p.dead) { return; }
     this.p.collisionMask ^= Q.SPRITE_ENEMY;
-    this.del('platformerControls');
     Q.state.set("playerAlive", false);
     this.p.dead = true;
-    this.p.vx = 0;
     this.p.points = this.p.deadPoints;
     this.play(this.p.direction + 'die');
   }
