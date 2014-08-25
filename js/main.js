@@ -24,8 +24,10 @@ Q.Sprite.extend("Player",{
       cx: 9,
       x: 200,
       y: 50,
+      z: 10,
       dead: false,
-      deadTimer: 0,
+      won: false,
+      animTimer: 0,
       direction: 'right',
       rightPoints: [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
       leftPoints:  [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
@@ -38,11 +40,12 @@ Q.Sprite.extend("Player",{
   },
 
   step: function () {
-    if (this.p.dead) {
+    if (this.p.dead || this.p.won) {
       this.del('platformerControls');
       this.p.vx = 0;
-      this.p.deadTimer++;
-      if (this.p.deadTimer > 36) {
+      this.p.animTimer++;
+      // If dead, end level after 40 frames. Otherwise end after 64 frames
+      if ( (this.p.dead && this.p.animTimer > 40) || this.p.animTimer > 64 ) {
         this.destroy();
         Q.stageScene("endLevel", 1);
       }
@@ -67,6 +70,7 @@ Q.Sprite.extend("Player",{
     this.p.collisionMask ^= Q.SPRITE_ENEMY;
     Q.state.set("playerAlive", false);
     this.p.dead = true;
+    this.p.cx = 15;
     this.p.points = this.p.deadPoints;
     this.play(this.p.direction + 'die');
   }
@@ -79,18 +83,23 @@ Q.Sprite.extend("Tower", {
     this._super(p, {
       sheet: 'tower',
       sprite: 'tower',
-      direction: 'left'
+      cy: 33,
+      points: [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
+      z: 20,
+      direction: 'left',
+      rescued: false,
+      rescueAnimTimer: 0
     });
     this.p.winActive = true;
 
     this.add('animation');
 
     this.on("hit.sprite", function (collision) {
-      if (!this.p.winActive) { return; }
+      if (!this.p.winActive || this.p.rescued) { return; }
       if (collision.obj.isA("Player")) {
-        //Q.stageScene("endGame",1, { label: "You Won!" });
-        Q.stageScene("endLevel", 1);
-        collision.obj.destroy();
+        collision.obj.p.won = true;
+        this.p.rescued = true;
+        this.play(this.p.direction + 'rescue');
       }
     });
 
@@ -100,6 +109,7 @@ Q.Sprite.extend("Tower", {
   },
 
   step: function () {
+    if (this.p.rescued) { return; }
     this.play(this.p.direction);
   }
 });
@@ -115,6 +125,7 @@ Q.Sprite.extend("Switch", {
     this.on("sensor");
   },
   sensor: function (col) {
+    if ( !Q.state.get("playerAlive") ) { return; }
     if ( (this.p._whenLastPressed < Q._loopFrame - 1) ) {
       this.stage.dark = !this.stage.dark;
       Q.state.set("lightdark", this.stage.dark);
@@ -174,7 +185,7 @@ Q.scene("level0", function (stage) {
 
   stage.insert(new Q.Tower({ x: 592, y: 17 }));
   stage.insert(new Q.Switch({ x: 304, y: 48 }));
-  stage.insert(new Q.Switch({ x: 592, y: -40 }));
+  stage.insert(new Q.Switch({ x: 560, y: -40 }));
 
   stage.insert(new Q.Enemy({ x: 400, y: 80 }));
 
@@ -190,7 +201,7 @@ Q.scene("level1", function (stage) {
     window.tiles = new Q.TileLayer({ dataAsset: 'level1.json', sheet: 'tiles' })
   );
 
-  stage.insert(new Q.Tower({ x: 656, y: 177 }));
+  stage.insert(new Q.Tower({ x: 688, y: 177 }));
   stage.insert(new Q.Switch({ x: 496, y: 80 }));
   stage.insert(new Q.Switch({ x: 592, y: 112 }));
 
@@ -237,12 +248,13 @@ Q.scene("endLevel", function(stage) {
   if (nextLevel >= NUM_LEVELS) {
     return Q.stageScene("endGame", 1, { label: "The End" });
   }
+  Q.state.set("lightdark", false);
   Q.state.set("playerAlive", true);
-  Q.stageScene("level" + nextLevel);
+  Q.stageScene("level" + nextLevel, {sort: true});
 });
 
 Q.scene('startGame', function(stage) {
   Q.state.set("playerAlive", true);
   Q.state.set("currentLevel", 0);
-  Q.stageScene("level0");
+  Q.stageScene("level0", {sort: true});
 });

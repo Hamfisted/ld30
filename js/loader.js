@@ -29,15 +29,19 @@ var assetsList = [
 
 Q.load(assetsList, function () {
   defineSheets();
+
   Q.animations("player", {
     right: { frames: [0], flip: false },
     left:  { frames: [0], flip: "x" },
-    rightdie: { frames: [1,2,3,4], rate: 1/12, flip: false, loop: false },
-    leftdie:  { frames: [1,2,3,4], rate: 1/12, flip: 'x',   loop: false }
+    rightdie: { frames: [1,2,3,4], rate: 1/8, flip: false, loop: false },
+    leftdie:  { frames: [1,2,3,4], rate: 1/8, flip: 'x',   loop: false }
   });
   Q.animations("tower", {
     right: { frames: [0], flip: false },
     left:  { frames: [0], flip: "x" },
+    rightrescue: { frames: [1,2,3,4], rate: 1/4, flip: false, loop: false },
+    leftrescue:  { frames: [1,2,3,4], rate: 1/4, flip: 'x',   loop: false },
   });
+
   Q.stageScene("startGame");
 });
