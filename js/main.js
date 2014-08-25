@@ -10,7 +10,7 @@ Q.input.keyboardControls({
   LEFT: 'left',   A: 'left',
   DOWN: 'down',   S: 'down',
   RIGHT: 'right', D: 'right',
-  R: 'restartLevel'
+  R: 'fire'
 });
 
 Q.Sprite.extend("Player",{
@@ -36,7 +36,7 @@ Q.Sprite.extend("Player",{
     this.add('2d, platformerControls, animation');
     this.on('die');
 
-    Q.input.on('restartLevel', this, 'endLevel');
+    Q.input.on('fire', this, 'endLevel');
   },
 
   step: function () {
