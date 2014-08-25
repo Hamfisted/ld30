@@ -53,6 +53,10 @@ Q.Sprite.extend("Player",{
     }
     this.p.points = this.p[this.p.direction + 'Points'];
     this.play(this.p.direction);
+
+    if (this.p.y > 800) {
+      this.die();
+    }
   },
 
   die: function () {
