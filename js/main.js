@@ -21,13 +21,14 @@ Q.Sprite.extend("Player",{
       sprite: 'player',
       type: Q.SPRITE_ACTIVE,
       collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ENEMY,
+      cx: 9,
       x: 200,
       y: 50,
       dead: false,
       deadTimer: 0,
       direction: 'right',
-      rightPoints: [ [ -15, -15 ], [ -15, 15 ], [  3, 15 ],  [  3, -15 ] ],
-      leftPoints:  [ [  15, -15 ], [  15, 15 ], [ -3, 15 ],  [ -3, -15 ] ],
+      rightPoints: [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
+      leftPoints:  [ [ -9, -15 ], [ -9, 15 ], [ 9, 15 ],  [ 9, -15 ] ],
       deadPoints:  [ [ -15, -15 ], [ -15, 15 ], [ 15, 15 ],  [ 15, -15 ] ],
     });
 
