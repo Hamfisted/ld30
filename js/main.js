@@ -184,6 +184,8 @@ Q.Sprite.extend("FallingBlock", {
     this.on("bump.top", function (col) {
       if (col.obj.isA("Player")) {
         this.p.activated = true;
+        // make player stick to the block when it's falling
+        col.obj.p.vy = this.p.vy;
       }
     });
   },
@@ -194,7 +196,7 @@ Q.Sprite.extend("FallingBlock", {
       if ( this.p.fallTimer >= 6 ) {
         this.p.gravity = Math.min(0.9, this.p.fallTimer/32);
       }
-      if ( this.p.y > 1000) {
+      if ( this.p.y > 1500) {
         this.destroy();
       }
       return;
