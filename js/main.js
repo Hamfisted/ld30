@@ -169,6 +169,41 @@ Q.Sprite.extend("Enemy",{
   }
 });
 
+Q.Sprite.extend("FallingBlock", {
+  init: function (p) {
+    this._super(p, {
+      sheet: 'falling-block',
+      sprite: 'falling-block',
+      z: 1,
+      collisionMask: Q.SPRITE_ACTIVE,
+      gravity: 0,
+      activated: false,
+      fallTimer: 0
+    });
+
+    this.add('2d');
+
+    this.on("bump.top", function (col) {
+      if (col.obj.isA("Player")) {
+        this.p.activated = true;
+      }
+    });
+  },
+  step: function () {
+    if (this.p.activated) {
+      this.p.fallTimer++;
+      // Ramp up gravity after a few frames
+      if ( this.p.fallTimer >= 6 ) {
+        this.p.gravity = Math.min(0.9, this.p.fallTimer/32);
+      }
+      if ( this.p.y > 1000) {
+        this.destroy();
+      }
+      return;
+    }
+  }
+});
+
 
 Q.state.on('change.lightdark', function (isDark) {
   var version = isDark ? '2' : '';

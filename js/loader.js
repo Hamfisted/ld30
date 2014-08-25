@@ -5,6 +5,7 @@ function defineSheets (version) {
 
   Q.compileSheets(spritesFile, 'sprites.json');
   Q.sheet('tiles', tilesFile, { tilew: 32, tileh: 32 });
+  Q.sheet('falling-block', tilesFile, { sx:64, sy:0, cols:1, tilew:32, tileh:32, frames:1 });
 
   // A hack to invalidate TileLayer canvas cache
   if (Q.stage()) {
