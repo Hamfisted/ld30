@@ -7,8 +7,8 @@ var Q = window.Q = Quintus()
 
 Q.input.keyboardControls({
   UP: 'up',       W: 'up',    SPACE: 'up',
-  LEFT: 'left',   A: 'left',  
-  DOWN: 'down',   S: 'down',  
+  LEFT: 'left',   A: 'left',
+  DOWN: 'down',   S: 'down',
   RIGHT: 'right', D: 'right',
 });
 
@@ -190,11 +190,12 @@ Q.scene("level1", function (stage) {
     window.tiles = new Q.TileLayer({ dataAsset: 'level1.json', sheet: 'tiles' })
   );
 
-  stage.insert(new Q.Tower({ x: 624, y: 177 }));
+  stage.insert(new Q.Tower({ x: 656, y: 177 }));
   stage.insert(new Q.Switch({ x: 496, y: 80 }));
   stage.insert(new Q.Switch({ x: 592, y: 112 }));
 
   stage.insert(new Q.Enemy({ x: 400, y: 112 }));
+  stage.insert(new Q.Enemy({ x: 592, y: 177 }));
 
   var player = stage.insert(new Q.Player({ x: 144, y: 160 }));
   stage.add("viewport").follow(player);
