@@ -118,6 +118,7 @@ Q.Sprite.extend("Switch", {
   init: function (p) {
     this._super(p, {
       sheet: 'switch',
+      sprite: 'switch',
       sensor: true,
       _whenLastPressed: -1
     });

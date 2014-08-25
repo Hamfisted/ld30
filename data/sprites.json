@@ -1,5 +1,6 @@
 {
   "player":{"sx":0,"sy":0, "cols":5,"tilew":30,"tileh":30,"frames":5,"rows":1,"spacingX":2},
   "tower": {"sx":0,"sy":32,"cols":5,"tilew":18,"tileh":48,"frames":5,"rows":1,"spacingX":14},
-  "enemy": {"sx":0,"sy":82,"cols":1,"tilew":30,"tileh":24,"frames":1}
+  "enemy": {"sx":0,"sy":82,"cols":1,"tilew":30,"tileh":24,"frames":1},
+  "switch":{"sx":0,"sy":108,"cols":1,"tilew":16,"tileh":16,"frames":1}
 }
