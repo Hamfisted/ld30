@@ -304,17 +304,20 @@ Q.scene("level3", function (stage) {
     window.tiles = new Q.TileLayer({ dataAsset: 'level3.json', sheet: 'tiles' })
   );
 
-  stage.insert(new Q.Tower({ x: 240, y: 49, flip: false }));
-  stage.insert(new Q.Switch({ x: 176, y: 208 }));
-  stage.insert(new Q.Switch({ x: 496, y: 80 }));
+  stage.insert(new Q.Tower({ x: 368, y: 209, flip: false }));
+  //stage.insert(new Q.Switch({ x: 48, y: 16 }));
+  stage.insert(new Q.Switch({ x: 304, y: 240 }));
+  stage.insert(new Q.Switch({ x: 368, y: 400 }));
 
-  stage.insert(new Q.Enemy({ x: 304, y: 208 }));
-  stage.insert(new Q.Enemy({ x: 400, y: 112 }));
+  stage.insert(new Q.Enemy({ x: 208, y: 144 }));
+  stage.insert(new Q.Enemy({ x: 400, y: 80 }));
+  stage.insert(new Q.Enemy({ x: 176, y: 16 }));
 
-  stage.insert(new Q.FallingBlock({ x: 144, y: 144 }));
-  stage.insert(new Q.FallingBlock({ x: 176, y: 144 }));
+  stage.insert(new Q.FallingBlock({ x: 176, y: 16 }));
+  stage.insert(new Q.FallingBlock({ x: 336, y: 80 }));
+  stage.insert(new Q.FallingBlock({ x: 240, y: 144 }));
 
-  var player = stage.insert(new Q.Player({ x: 32, y: 0 }));
+  var player = stage.insert(new Q.Player({ x: 112, y: 208 }));
   stage.add("viewport").follow(player);
 });
 
