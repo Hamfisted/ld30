@@ -73,6 +73,9 @@ Q.Sprite.extend("Player",{
   },
 
   endLevel: function () {
+    // Don't change scene more than once
+    if (this.p.inactive) { return; }
+    this.p.inactive = true;
     Q.stageScene("endLevel", 1, { player: this });
   }
 
