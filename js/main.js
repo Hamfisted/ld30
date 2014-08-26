@@ -116,6 +116,7 @@ Q.Sprite.extend("Switch", {
     this._super(p, {
       sheet: 'switch',
       sprite: 'switch',
+      z: 2,
       sensor: true,
       _whenLastPressed: -1
     });
@@ -138,6 +139,7 @@ Q.Sprite.extend("Enemy",{
   init: function (p) {
     this._super(p, {
       sheet: 'enemy',
+      z: 3,
       vx: 100,
       type: Q.SPRITE_ENEMY,
       collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ENEMY,
@@ -167,12 +169,35 @@ Q.Sprite.extend("Enemy",{
   }
 });
 
+Q.Sprite.extend("Web", {
+  init: function (p) {
+    this._super(p, {
+      sheet: 'web',
+      sprite: 'web',
+      z: 1,
+      type: Q.SPRITE_FRIENDLY,
+      collisionMask: Q.SPRITE_NONE
+    });
+
+    Q.state.on("change.lightdark", this, function(isDark) {
+      if (isDark) {
+        this.p.collisionMask = Q.SPRITE_DEFAULT | Q.SPRITE_ACTIVE;
+      } else {
+        this.p.collisionMask = Q.SPRITE_NONE;
+      }
+    });
+  },
+  step: function () {
+    this.stage.collide(this);
+  }
+});
+
 Q.Sprite.extend("FallingBlock", {
   init: function (p) {
     this._super(p, {
       sheet: 'falling-block',
       sprite: 'falling-block',
-      z: 1,
+      z: 5,
       collisionMask: Q.SPRITE_ACTIVE,
       gravity: 0,
       activated: false,
@@ -259,14 +284,13 @@ Q.scene("level2", function (stage) {
   stage.insert(new Q.Tower({ x: 240, y: 49, flip: false }));
   stage.insert(new Q.Switch({ x: 176, y: 208 }));
   stage.insert(new Q.Switch({ x: 496, y: 80 }));
-  // stage.insert(new Q.Switch({ x: 592, y: 112 }));
 
   stage.insert(new Q.Enemy({ x: 304, y: 208 }));
   stage.insert(new Q.Enemy({ x: 400, y: 112 }));
-  // stage.insert(new Q.Enemy({ x: 592, y: 177 }));
 
-  stage.insert(new Q.FallingBlock({ x: 144, y: 144 }));
   stage.insert(new Q.FallingBlock({ x: 176, y: 144 }));
+
+  stage.insert(new Q.Web({ x: 112, y: 206 }));
 
   var player = stage.insert(new Q.Player({ x: 32, y: 0 }));
   stage.add("viewport").follow(player);

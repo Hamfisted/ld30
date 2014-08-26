@@ -2,10 +2,13 @@ function defineSheets (version) {
   version = version || "";
   var spritesFile = 'sprites' + version + '.png';
   var tilesFile = 'tiles' + version + '.png';
+  var webFile = 'web' + version + '.png';
 
   Q.compileSheets(spritesFile, 'sprites.json');
   Q.sheet('tiles', tilesFile, { tilew: 32, tileh: 32 });
   Q.sheet('falling-block', tilesFile, { sx:64, sy:0, cols:1, tilew:32, tileh:32, frames:1 });
+
+  Q.sheet('web', webFile, { sx:0, sy:0, cols:1, tilew:32, tileh:32, frames:1 });
 
   // A hack to invalidate TileLayer canvas cache
   if (Q.stage()) {
@@ -23,6 +26,8 @@ var assetsList = [
   'tiles.png',
   'tiles2.png',
   'background-wall.png',
+  'web.png',
+  'web2.png',
   'level0.json',
   'level1.json',
   'level2.json',
