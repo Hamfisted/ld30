@@ -73,8 +73,7 @@ Q.Sprite.extend("Player",{
   },
 
   endLevel: function () {
-    this.destroy();
-    Q.stageScene("endLevel", 1, { won: this.p.won });
+    Q.stageScene("endLevel", 1, { player: this });
   }
 
 });
@@ -341,15 +340,23 @@ Q.scene('overlay', function (stage) {
 // to control the displayed message.
 Q.scene('endGame', function (stage) {
   var container = stage.insert(new Q.UI.Container({
-    x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
+    x: Q.width/2, y: Q.height/3, fill: "rgba(0,0,0,0.5)"
   }));
 
   var button = container.insert(
     new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC", label: "Play Again" })
   );
-  var label = container.insert(
-    new Q.UI.Text({x:10, y: -10 - button.p.h, label: stage.options.label })
-  );
+
+  var label = container.insert(new Q.UI.Text({
+    y: -40 - button.p.h,
+    label: 'The End',
+    color: 'white',
+    family: 'KenPixel Mini',
+    weight: 400,
+    size: 30,
+    outlineColor: 'black',
+    outlineWidth: 6
+  }));
 
   // When the button is clicked, clear all the stages and restart the game.
   button.on("click", function () {
@@ -364,13 +371,14 @@ Q.scene('endGame', function (stage) {
 var NUM_LEVELS = 4;
 
 Q.scene("endLevel", function (stage) {
-  if (stage.options.won) {
+  if (stage.options.player.p.won) {
     Q.state.inc("currentLevel", 1);
   }
   var nextLevel = Q.state.get("currentLevel");
   if (nextLevel >= NUM_LEVELS) {
-    return Q.stageScene("endGame", 1, { label: "The End" });
+    return Q.stageScene("endGame", 1);
   }
+  stage.options.player.destroy();
   Q.stageScene('startLevel');
 });
 
